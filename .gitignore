@@ -1,0 +1,8 @@
+wallets/*
+validators/*
+logs/*
+dbs/*
+__pycache__
+genesis.json
+nodesSetup.json
+docker-compose.yaml
