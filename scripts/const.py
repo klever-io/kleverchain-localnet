@@ -36,6 +36,7 @@ _NODE_SETUP = """{
 }
 """
 
+
 _COMPOSER_BASE = """
 version: '3'
 services:
@@ -66,7 +67,10 @@ _COMPOSER_NODES = """
       image: kleverapp/klever-go:v1.7.5-11-gd7a0cff7-testnet
       container_name: node%s
       restart: unless-stopped
-      network_mode: host
+      networks:
+        - klever
+      ports:
+        - 88%s:88%s
       volumes:
         - ./config/node:/opt/klever-blockchain/config/node
         - ./validators/node-%s/validatorKey.pem:/opt/klever-blockchain/config/validatorKey.pem

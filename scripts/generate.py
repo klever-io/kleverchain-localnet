@@ -39,9 +39,9 @@ def read_keys():
 
 def main():
     # Generate the wallets and validators keys
+    print("Generating Keys...")
     generate_keys(f'{base_dir}/validators', 'validator', num_validators, "generate_keys")
     generate_keys(f'{base_dir}/wallets', 'wallet', num_validators, "generate_keys")
-
     # Read Wallets and Validators
     read_keys()
 
@@ -56,23 +56,24 @@ def main():
         key = f'node-{i}'
         orderedValidators.append(validators[key]['pubkey'])
 
-
+    print("Generating Genesis...")
     # generate genesis
     generate_genesis(wallets=orderedWallets,
                      klv_supply=max_supply,
                      path=base_dir
                      )
 
+    print("Generating Nodes Setup...")
     # generate nodes setup
     generate_nodes_setup(wallets=orderedWallets,
                          validators=orderedValidators,
                          path=base_dir
                         )
     
+    print("Generating Docker-compose...")
     generate_compose(validators=orderedValidators)
 
 if __name__ == "__main__":
     global base_dir
     base_dir = os.getcwd()
-
     main()

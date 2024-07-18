@@ -3,9 +3,15 @@ import subprocess
 
 def generate_keys(volume_path, key_type, num_keys, node_container):
     try:
+        path = volume_path
+        if num_keys == 1:
+            if not os.path.exists(path):
+                os.makedirs(path)
+            path += "/node-0/"
+
         command = [
             'docker', 'run', '--rm',
-            '-v', f'{os.path.abspath(volume_path)}:/opt/klever-blockchain',
+            '-v', f'{os.path.abspath(path)}:/opt/klever-blockchain',
             '--user', f'{os.getuid()}:{os.getgid()}',
             '--name', node_container,
             '--entrypoint', '',
