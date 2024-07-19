@@ -11,6 +11,9 @@ generate_keys:
     	--user "$(shell id -u):$(shell id -g)" \
     	--entrypoint='' kleverapp/klever-go:latest keygenerator --num-keys ${VALIDATORS_NUM} --key-type both
 
+generate_dirs:
+	VALIDATORS_NUM=${VALIDATORS_NUM} "$(shell pwd)"/scripts/generate_dir.sh
+
 create-localnet:
 	VALIDATORS_NUM=${VALIDATORS_NUM} \
 	MAX_SUPPLY=${MAX_SUPPLY} \
