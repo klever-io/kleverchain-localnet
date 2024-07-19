@@ -1,6 +1,8 @@
 import os
 import subprocess
 
+num_validators = int(os.getenv("VALIDATORS_NUM", 1))
+
 def generate_keys(volume_path, key_type, num_keys, node_container):
     try:
         path = volume_path
@@ -24,3 +26,10 @@ def generate_keys(volume_path, key_type, num_keys, node_container):
         print(f"Output for {key_type} keys:\n{result.stdout.decode('utf-8')}")
     except subprocess.CalledProcessError as e:
         raise Exception(f"docker error: {e}")
+
+if __name__ == "__main__":
+    # Generate the wallets and validators keys
+    base_dir = os.getcwd()
+    print("Generating Keys...")
+    generate_keys(f'{base_dir}/validators', 'validator', num_validators, "generate_keys")
+    generate_keys(f'{base_dir}/wallets', 'wallet', num_validators, "generate_keys")

@@ -1,7 +1,6 @@
 import os
 
 from utils import get_pem_header
-from generate_keys import generate_keys
 from generate_configs import generate_genesis,generate_nodes_setup
 from generate_compose import generate_compose
 
@@ -38,10 +37,10 @@ def read_keys():
 
 
 def main():
-    # Generate the wallets and validators keys
-    print("Generating Keys...")
-    generate_keys(f'{base_dir}/validators', 'validator', num_validators, "generate_keys")
-    generate_keys(f'{base_dir}/wallets', 'wallet', num_validators, "generate_keys")
+    # # Generate the wallets and validators keys
+    # print("Generating Keys...")
+    # generate_keys(f'{base_dir}/validators', 'validator', num_validators, "generate_keys")
+    # generate_keys(f'{base_dir}/wallets', 'wallet', num_validators, "generate_keys")
     # Read Wallets and Validators
     read_keys()
 
