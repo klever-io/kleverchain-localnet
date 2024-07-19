@@ -46,7 +46,6 @@ If you want more validators change the **VALIDATORS_NUM** const in Makefile
 
 <hr>
 
-* if **make create-localnet** gives permission error, you need to give permission to the keys folder
 * if you want to change the genesis time, just change the  **startTime** in nodesSetup.json after generate.
 * if you want reset blockchain you can delete the dbs generated after you started the blockchain.
 * if you want restart the node just add --start-in-sync to the node startup
