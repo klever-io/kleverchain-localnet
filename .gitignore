@@ -1,4 +1,5 @@
 wallets/*
+keys/*
 validators/*
 logs/*
 dbs/*

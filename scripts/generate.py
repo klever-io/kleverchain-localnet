@@ -4,44 +4,50 @@ from utils import get_pem_header
 from generate_configs import generate_genesis,generate_nodes_setup
 from generate_compose import generate_compose
 
-num_validators = int(os.getenv("VALIDATORS_NUM", 3))
+num_validators = int(os.getenv("VALIDATORS_NUM", 1))
 max_supply = int(os.getenv("MAX_SUPPLY", 10_000_000_000_000_000))
 
 validators = {}
 wallets = {}
 
 def read_keys():
-    base_validators_path = f'{base_dir}/validators'
-    for (dirpath, _, _) in  os.walk(base_validators_path):
-        if dirpath == base_validators_path:
-            continue
+    if num_validators == 1:
+        base_validators_path = f'{base_dir}/keys'
+        for (dirpath, _, _) in  os.walk(base_validators_path):
+            node_name = "node-0"
 
-        node_name = dirpath.split("/validators/")[1]
+            # Get validator public key
+            pubkey = get_pem_header(dirpath + "/validatorKey.pem")
+            address = get_pem_header(dirpath + "/walletKey.pem")
 
-        # Get validator public key
-        pubkey = get_pem_header(dirpath + "/validatorKey.pem")
+            validators[node_name] = {"path": dirpath, "pubkey": pubkey}
+            wallets[node_name] = {"path": dirpath, "address": address}
+    else:
+        base_validators_path = f'{base_dir}/keys/'
+        for (dirpath, _, _) in  os.walk(base_validators_path):
+            if dirpath == base_validators_path:
+                continue
 
-        validators[node_name] = {"path": dirpath, "pubkey": pubkey}
+            node_name = dirpath.split("/keys/")[1]
 
-    base_wallet_path = f'{base_dir}/wallets'
-    for (dirpath, _, _) in  os.walk(base_wallet_path):
-        if dirpath == base_wallet_path:
-            continue
+            # Get validator public key
+            pubkey = get_pem_header(dirpath + "/validatorKey.pem")
 
-        node_name = dirpath.split("/wallets/")[1]
+            validators[node_name] = {"path": dirpath, "pubkey": pubkey}
 
-        # Get address
-        address = get_pem_header(dirpath + "/walletKey.pem")
+        base_wallet_path = f'{base_dir}/keys'
+        for (dirpath, _, _) in  os.walk(base_wallet_path):
+            if dirpath == base_wallet_path:
+                continue
 
-        wallets[node_name] = {"path": dirpath, "address": address}
+            node_name = dirpath.split("/keys/")[1]
 
+            # Get address
+            address = get_pem_header(dirpath + "/walletKey.pem")
+
+            wallets[node_name] = {"path": dirpath, "address": address}
 
 def main():
-    # # Generate the wallets and validators keys
-    # print("Generating Keys...")
-    # generate_keys(f'{base_dir}/validators', 'validator', num_validators, "generate_keys")
-    # generate_keys(f'{base_dir}/wallets', 'wallet', num_validators, "generate_keys")
-    # Read Wallets and Validators
     read_keys()
 
     orderedWallets = []
@@ -70,7 +76,8 @@ def main():
                         )
     
     print("Generating Docker-compose...")
-    generate_compose(validators=orderedValidators)
+    # print(validators)
+    generate_compose(validators=validators)
 
 if __name__ == "__main__":
     global base_dir
