@@ -30,13 +30,15 @@ If you want more validators change the **VALIDATORS_NUM** const in Makefile
     make generate_dirs
 ```
 
-6. Run docker-compose !!
+6. Give permissions to the logs and dbs folders if needed.
+
+7. Run docker-compose !!
 
 ```bash
     make compose-up
 ```
 
-7. Checking logs of node 0
+8. Checking logs of node 0
 
 ```bash
     docker logs --tail 5 -f node0
