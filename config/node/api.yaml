@@ -5,9 +5,13 @@ apiPackages:
         open: true
       - name: /:address/balance
         open: true
+      - name: /:address/kda
+        open: true
       - name: /:address/nonce
         open: true
       - name: /:address/allowance
+        open: true
+      - name: /:address/allowance/list
         open: true
   subscribe:
     routes:
@@ -43,6 +47,10 @@ apiPackages:
         open: true
       - name: /:txhash
         open: true
+      - name: /simulate
+        open: true
+      - name: /estimate-fee
+        open: true
   validator:
     routes:
       - name: /statistics
@@ -74,10 +82,31 @@ apiPackages:
       - name: /statistics
         open: true
       - name: /set-redundancy
-        open: false
+        open: true
+        secured: true
       - name: /enable-epochs
+        open: true
+      - name: /heartbeatstatus
         open: true
   log:
     routes:
       - name: /log
         open: true
+  vm:
+    routes:
+      - name: /hex
+        open: true
+      - name: /string
+        open: true
+      - name: /int
+        open: true
+      - name: /query
+        open: true
+
+credentials:
+  - username: example
+    password: hashed password
+  - username: example2
+    password: hashed password
+hasher:
+  type: sha256
