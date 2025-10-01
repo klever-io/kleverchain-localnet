@@ -6,12 +6,12 @@ ifndef MAX_SUPPLY
 MAX_SUPPLY := 10000000000000000
 endif
 
-generate_keys:
+generate-keys:
 	docker run --rm -v $(shell pwd)/keys:/opt/klever-blockchain \
     	--user "$(shell id -u):$(shell id -g)" \
     	--entrypoint='' kleverapp/klever-go:latest keygenerator --num-keys ${VALIDATORS_NUM} --key-type both
 
-generate_dirs:
+generate-dirs:
 	VALIDATORS_NUM=${VALIDATORS_NUM} "$(shell pwd)"/scripts/generate_dir.sh
 
 create-localnet:
