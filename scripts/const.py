@@ -41,7 +41,7 @@ _COMPOSER_BASE = """
 version: '3'
 services:
   seednode:
-    image: kleverapp/klever-go:v1.7.6-41-g8c0c20ded-testnet
+    image: kleverapp/klever-go:v1.7.14-0-g22769b30
     container_name: seednode
     restart: unless-stopped
     volumes:
@@ -64,7 +64,7 @@ networks:
 
 _COMPOSER_NODES = """
   node%s:
-      image: kleverapp/klever-go:v1.7.5-11-gd7a0cff7-testnet
+      image: kleverapp/klever-go:v1.7.14-0-g22769b30
       container_name: node%s
       restart: unless-stopped
       networks:

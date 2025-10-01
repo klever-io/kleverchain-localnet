@@ -30,7 +30,7 @@ def generate_genesis(wallets,klv_supply,path):
 
 def generate_nodes_setup(wallets, validators, path):
     start_time = datetime.now().strftime("%s")
-    start_time = int(start_time) + 550 - (int(start_time) % 500)
+    start_time = int(start_time) + 560 - (int(start_time) % 500)
     chain_id = start_time // 500
     
     slot_per_epoch = 20
