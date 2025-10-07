@@ -10,7 +10,7 @@ p2p:
     refreshIntervalInSec: 10
     protocolID: /klv/kad/0.0.1
     initialPeerList:
-      - /ip4/172.20.0.5/tcp/37373/p2p/16Uiu2HAkvsiFSh3EDH66oT6cETfwf5JBHYsgKCKxJQUgq8Db8kFf
+      - /ip4/172.25.0.5/tcp/37373/p2p/16Uiu2HAkvsiFSh3EDH66oT6cETfwf5JBHYsgKCKxJQUgq8Db8kFf
     bucketSize: 100
     routingTableRefreshIntervalInSec: 300
   sharding:

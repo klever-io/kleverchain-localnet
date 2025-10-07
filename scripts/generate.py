@@ -12,38 +12,38 @@ wallets = {}
 
 def read_keys():
     if num_validators == 1:
-        base_validators_path = f'{base_dir}/keys'
+        base_validators_path = os.path.join(base_dir, 'keys')
         for (dirpath, _, _) in  os.walk(base_validators_path):
             node_name = "node-0"
 
             # Get validator public key
-            pubkey = get_pem_header(dirpath + "/validatorKey.pem")
-            address = get_pem_header(dirpath + "/walletKey.pem")
+            pubkey = get_pem_header(os.path.join(dirpath, "validatorKey.pem"))
+            address = get_pem_header(os.path.join(dirpath, "walletKey.pem"))
 
             validators[node_name] = {"path": dirpath, "pubkey": pubkey}
             wallets[node_name] = {"path": dirpath, "address": address}
     else:
-        base_validators_path = f'{base_dir}/keys/'
+        base_validators_path = os.path.join(base_dir, 'keys')
         for (dirpath, _, _) in  os.walk(base_validators_path):
             if dirpath == base_validators_path:
                 continue
 
-            node_name = dirpath.split("/keys/")[1]
+            node_name = os.path.basename(dirpath)
 
             # Get validator public key
-            pubkey = get_pem_header(dirpath + "/validatorKey.pem")
+            pubkey = get_pem_header(os.path.join(dirpath, "validatorKey.pem"))
 
             validators[node_name] = {"path": dirpath, "pubkey": pubkey}
 
-        base_wallet_path = f'{base_dir}/keys'
+        base_wallet_path = os.path.join(base_dir, 'keys')
         for (dirpath, _, _) in  os.walk(base_wallet_path):
             if dirpath == base_wallet_path:
                 continue
 
-            node_name = dirpath.split("/keys/")[1]
+            node_name = os.path.basename(dirpath)
 
             # Get address
-            address = get_pem_header(dirpath + "/walletKey.pem")
+            address = get_pem_header(os.path.join(dirpath, "walletKey.pem"))
 
             wallets[node_name] = {"path": dirpath, "address": address}
 

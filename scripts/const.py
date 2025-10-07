@@ -52,14 +52,14 @@ services:
     ]
     networks:
       klever:
-        ipv4_address: 172.20.0.5
+        ipv4_address: 172.25.0.5
 %s
 networks:
   klever:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.20.0.0/24
+        - subnet: 172.25.0.0/24
 """
 
 _COMPOSER_NODES = """
