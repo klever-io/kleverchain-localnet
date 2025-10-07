@@ -20,7 +20,7 @@ Cross-platform setup script for running Klever blockchain nodes locally. Works o
 Maybe you need to give permissions to dbs/ logs/ and keys/ to the nodes have permissions after setup localnet.
 
 ```bash
-  chmod -R 775 dbs/* keys/* logs/*
+  chmod -R 777 dbs/* keys/* logs/*
 ```
 
 ### Complete Setup (One Command)

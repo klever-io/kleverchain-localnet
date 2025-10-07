@@ -237,9 +237,10 @@ class SetupManager:
         self.print_success("Containers started successfully!")
         self.print_info("Run 'python setup.py status' to check container status")
 
-    def stop(self):
+    def stop(self, print_header=True):
         """Stop Docker containers"""
-        self.print_header("Stopping Docker Containers")
+        if print_header:
+            self.print_header("Stopping Docker Containers")
 
         self.print_info("Stopping containers...")
         self.run_command(['docker', 'compose', 'down'])
@@ -297,6 +298,8 @@ class SetupManager:
         if response.lower() not in ['yes', 'y']:
             self.print_info("Cleanup cancelled")
             return
+        
+        self.stop(False)
 
         items_to_remove = [
             self.base_dir / 'keys',
