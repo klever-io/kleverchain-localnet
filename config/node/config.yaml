@@ -10,7 +10,7 @@ p2p:
     refreshIntervalInSec: 10
     protocolID: /klv/kad/0.0.1
     initialPeerList:
-      - /ip4/172.20.0.5/tcp/37373/p2p/16Uiu2HAkvsiFSh3EDH66oT6cETfwf5JBHYsgKCKxJQUgq8Db8kFf
+      - /ip4/172.25.0.5/tcp/37373/p2p/16Uiu2HAkvsiFSh3EDH66oT6cETfwf5JBHYsgKCKxJQUgq8Db8kFf
     bucketSize: 100
     routingTableRefreshIntervalInSec: 300
   sharding:
@@ -113,7 +113,7 @@ antiflood:
     reservedPercent: 20.0
     peerMaxInput:
       baseMessagesPerInterval: 6000
-      totalSizePerInterval: 18874368 # 18MB/interval
+      totalSizePerInterval: 33554432 # 32MB/interval
       increaseFactor:
         threshold: 10 #if consensus size will exceed this value, then
         factor: 0.0 #increase the base value with [factor*consensus size]
@@ -148,7 +148,7 @@ antiflood:
     type: LRU
 
   topic:
-    defaultMaxMessagesPerSec: 15000
+    defaultMaxMessagesPerSec: 35000
     maxMessages:
       - topic: heartbeat
         numMessagesPerSec: 70
@@ -187,10 +187,6 @@ heartbeat:
   hideInactiveValidatorIntervalInSec: 3600
   durationToConsiderUnresponsiveInSec: 60
 
-softwareVersion:
-  stableTagLocation: https://api.github.com/repos/klever-io/klever-go/releases/latest
-  pollingIntervalInMinutes: 65
-
 # DB CONFIGs
 evictionWaitingList:
   size: 10000
@@ -203,9 +199,9 @@ evictionWaitingList:
 
 stateTriesConfig:
   checkpointSlotsModulus: 100
-  accountsStatePruningEnabled: true
+  accountsStatePruningEnabled: false
   peerStatePruningEnabled: true
-  kappStatePruningEnabled: true
+  kappStatePruningEnabled: false
   maxStateTrieLevelInMemory: 5
   maxPeerTrieLevelInMemory: 5
   maxKAppTrieLevelInMemory: 5
@@ -249,12 +245,12 @@ whiteListerVerifiedTxs:
   type: FIFOSharded
   shards: 50
 
-validatorStatistics:
-  cacheRefreshIntervalInSec: 60
-
 resourceStats:
   enabled: true
   refreshIntervalInSec: 30
+
+validatorStatistics:
+  cacheRefreshIntervalInSec: 60
 
 accountsTrieStorage:
   cache:
@@ -443,9 +439,9 @@ dbLookupExtensions:
 
 storagePruning:
   # If the Enabled flag is set to false, then the storers won't divide epochs into separate dbs
-  enabled: false
+  enabled:  true
   # If this flag is set to false, the node won't delete any database between epochs
-  cleanOldEpochsData: false
+  cleanOldEpochsData: true
   # NumEpochsToKeep - if the flag above is set to true, this will set the number of epochs to keep in the storage.
   # Epochs older that (current epoch - NumOfEpochsToKeep) will be removed
   numEpochsToKeep: 10
@@ -526,10 +522,6 @@ elasticSearch:
   username: basic_auth_username
   password: basic_auth_password
 
-maxNodesChangeEnableEpoch:
-  - epochEnable: 0
-    nodesToShuffle: 4
-
 #Ratings configuration
 
 # proposer-validator importanceRatio = 1 =>
@@ -593,7 +585,7 @@ epochStart:
 
 virtualMachine:
   execution:
-    timeOutForSCExecutionInMilliseconds: 3000 # 3 seconds = 3000 milliseconds
+    timeOutForSCExecutionInMilliseconds: 500 # 0.5 seconds = 500 milliseconds
     wasmerSIGSEGVPassthrough: false # must be false for release
     wasmVMVersions:
       - startEpoch: 0
@@ -601,89 +593,19 @@ virtualMachine:
 
   querying:
     numConcurrentVMs: 1
-    timeOutForSCExecutionInMilliseconds: 3000 # 3 seconds = 3000 milliseconds
+    timeOutForSCExecutionInMilliseconds: 500 # 0.5 seconds = 500 milliseconds
     wasmerSIGSEGVPassthrough: false # must be false for release
     wasmVMVersions:
       - startEpoch: 0
-        version: "v1.0"
-      - startEpoch: 1
         version: "v1.0"
 
   gasConfig:
     # The following values define the maximum amount of gas to be allocated for VM Queries coming from API
     # If set to 0, then MaxUInt64 will be used
-    metaMaxGasPerVmQuery: 0 #unlimited
+    metaMaxGasPerVmQuery: 1500000000  # Set reasonable limit
 
 builtInFunctions:
   maxNumAddressesInTransferRole: 100
-
-hardfork:
-  enableTrigger: true
-  enableTriggerFromP2P: true
-  publicKeyToListenFrom: "153dae6cb3963260f309959bf285537b77ae16d82e9933147be7827f7394de8dc97d9d9af41e970bc72aecb44b77e819621081658c37f7000d21e2d0e8963df83233407bde9f46369ba4fcd03b57f40b80b06c191a428cfb5c447ec510e79307"
-  closeAfterExportInMinutes: 10000
-  afterHardFork: false
-  importFolder: "export"
-  startSlot: 10000
-  startNonce: 10000
-  startEpoch: 100
-  genesisTime: 0
-  validatorGracePeriodInEpochs: 1 #defines how long is the rating computation disabled after hardfork
-  exportStateStorageConfig:
-    cache:
-      name: "HardFork.ExportStateStorageConfig"
-      capacity: 5000
-      type: "LRU"
-    db:
-      filePath: "ExportStateStorage/MainDB"
-      type: "LvlDBSerial"
-      batchDelaySeconds: 2
-      maxBatchSize: 1000
-      maxOpenFiles: 10
-  exportKeysStorageConfig:
-    cache:
-      name: "HardFork.ExportKeysStorageConfig"
-      capacity: 5000
-      type: "LRU"
-    db:
-      filePath: "ExportKeysStorageConfig/MainDB"
-      type: "LvlDBSerial"
-      batchDelaySeconds: 2
-      maxBatchSize: 1000
-      maxOpenFiles: 10
-  exportTriesStorageConfig:
-    cache:
-      name: "HardFork.ExportTriesStorageConfig"
-      capacity: 5000
-      type: "LRU"
-    db:
-      filePath: "ExportTrieStorage/MainTrie"
-      type: "LvlDBSerial"
-      batchDelaySeconds: 2
-      maxBatchSize: 1000
-      maxOpenFiles: 10
-  importStateStorageConfig:
-    cache:
-      name: "HardFork.ImportStateStorageConfig"
-      capacity: 5000
-      type: "LRU"
-    db:
-      filePath: "ExportStateStorage/MainDB"
-      type: "LvlDBSerial"
-      batchDelaySeconds: 2
-      maxBatchSize: 1000
-      maxOpenFiles: 10
-  importKeysStorageConfig:
-    cache:
-      name: "HardFork.ImportKeysStorageConfig"
-      capacity: 5000
-      type: "LRU"
-    db:
-      filePath: "ExportKeysStorageConfig/MainDB"
-      type: "LvlDBSerial"
-      batchDelaySeconds: 2
-      maxBatchSize: 1000
-      maxOpenFiles: 10
 
 trieSync:
   numConcurrentTrieSyncers: 200
@@ -694,5 +616,6 @@ importDbConfig:
   importDBStartInEpoch: 0
   importDBWorkingDir: "./importedDB"
   importDbNoSigCheckFlag: false
+  importDbSaveTrieEpochRootHash: false
 
 consensusMonitorList:

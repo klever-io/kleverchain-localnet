@@ -29,7 +29,7 @@ def generate_genesis(wallets,klv_supply,path):
         json.dump(genesis,genesis_file,ensure_ascii=False, indent=4)
 
 def generate_nodes_setup(wallets, validators, path):
-    start_time = datetime.now().strftime("%s")
+    start_time = int(datetime.now().timestamp())
     start_time = int(start_time) + 500 - (int(start_time) % 500)
     chain_id = start_time // 500
     

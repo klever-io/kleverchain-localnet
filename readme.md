@@ -1,61 +1,178 @@
-# Kleverchain LocalNet
+# Klever Fast Node Setup
 
-### Requirements
+Cross-platform setup script for running Klever blockchain nodes locally. Works on **Linux**, **macOS**, and **Windows**.
 
-* Docker and Docker-compose
-* Python 3.X
+## 📋 Requirements
 
+### All Platforms
 
-### Instructions
+- **Docker Desktop** (version 20.10+)
+  - Linux: [Install Docker Engine](https://docs.docker.com/engine/install/)
+  - macOS: [Docker Desktop for Mac](https://docs.docker.com/desktop/install/mac-install/)
+  - Windows: [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/)
+- **Python 3.7+** (for configuration generation scripts)
+  - Verify: `python --version` or `python3 --version`
 
-1. Generate Keys
+## 🚀 Quick Start
 
-If you want more validators change the **VALIDATORS_NUM** const in Makefile
+### For Linux users
+
+Maybe you need to give permissions to dbs/ logs/ and keys/ to the nodes have permissions after setup localnet.
 
 ```bash
-    make generate_keys
+  chmod -R 777 dbs/* keys/* logs/*
 ```
 
-2. Give permissions to keys if needed.
+### Complete Setup (One Command)
 
-3. Generate LocalNet configs and Docker-compose
+The easiest way to get started:
 
 ```bash
-    make create-localnet
+# Linux/macOS
+python3 setup.py setup-all
+
+# Windows
+python setup.py setup-all
 ```
 
-5. Generate logs and dbs folder
+This automatically:
+1. ✓ Checks all requirements
+2. ✓ Generates validator and wallet keys
+3. ✓ Creates necessary directories
+4. ✓ Generates configuration files
+
+
+### With Custom Configuration
 
 ```bash
-    make generate_dirs
+# Setup with 3 validators
+python setup.py setup-all -n 3
+
+# Setup with custom max supply
+python setup.py setup-all -n 5 -s 10000000000000000
 ```
 
-6. Give permissions to the logs and dbs folders if needed.
-
-7. Run docker-compose !!
+### Monitor the Network
 
 ```bash
-    make compose-up
+# Check container status
+python setup.py status
+
+# View logs (CTRL+C to exit)
+python setup.py logs
+
+# View logs of specific node
+docker logs -f node-0
 ```
 
-8. Checking logs of node 0
+## 🔧 Available Commands
+
+### Setup Commands
 
 ```bash
-    docker logs --tail 5 -f node0
+# Complete automated setup
+python setup.py setup-all
+
+# Individual steps
+python setup.py check-requirements    # Verify dependencies
+python setup.py generate-keys -n 3    # Generate keys for 3 validators
+python setup.py generate-dirs -n 3    # Create directories
+python setup.py create-localnet -n 3  # Generate configs
 ```
 
-<hr>
-
-* if you want to change the genesis time, just change the  **startTime** in nodesSetup.json after generate.
-* if you want reset blockchain you can delete the dbs generated after you started the blockchain.
-* if you want restart the node just add --start-in-sync to the node startup
+### Container Management
 
 ```bash
-    command: [
-    "--log-level=*:INFO",
-    "--use-log-view",
-    "--validator-key-pem-file=./config/validatorKey.pem",
-    "--rest-api-interface=0.0.0.0:8800",
-    "--start-in-sync"
-    ]
+# Start containers
+python setup.py start
+
+# Stop containers
+python setup.py down
+
+# Restart containers
+python setup.py restart
+
+# Check status
+python setup.py status
+
+# View logs
+python setup.py logs
+
+# View logs without following
+python setup.py logs --no-follow
+```
+
+### Cleanup
+
+```bash
+# Remove generated configs only
+python setup.py clean
+
+# Remove EVERYTHING (keys, dbs, logs, configs) - DESTRUCTIVE!
+python setup.py clean-all
+```
+
+### Help
+
+```bash
+# Show all commands and options
+python setup.py -h
+```
+
+## 🛠️ Advanced Usage
+
+### Resetting the Blockchain
+
+To completely reset the blockchain state:
+
+```bash
+# Clean everything and start fresh
+python setup.py clean-all
+python setup.py setup-all
+```
+
+### Custom Configuration
+
+You can modify generated files before starting:
+
+```bash
+# Generate everything but don't start
+python setup.py generate-keys -n 3
+python setup.py generate-dirs -n 3
+python setup.py create-localnet -n 3
+
+# Modify configs/genesis.json or docker-compose.yaml as needed
+# Edit configs/nodesSetup.json to change startTime if needed
+
+# Then start
+python setup.py start
+```
+
+## 📁 Project Structure
+
+```
+fast-node-setup/
+├── keys/              # Generated validator and wallet keys
+│   ├── node-0/
+│   │   ├── validatorKey.pem
+│   │   └── walletKey.pem
+│   ├── node-1/
+│   └── ...
+├── dbs/               # Blockchain databases
+│   ├── node-0/
+│   ├── node-1/
+│   └── ...
+├── logs/              # Node logs
+│   ├── node-0/
+│   ├── node-1/
+│   └── ...
+├── configs/           # Generated configuration files
+│   ├── genesis.json
+│   ├── nodesSetup.json
+│   └── ...
+├── scripts/           # Helper scripts
+├── docker-compose.yaml   # Generated Docker Compose file
+├── setup.py          # Cross-platform setup script
+├── Makefile          # Alternative Make-based setup (Linux only)
+└── README.md
 ```

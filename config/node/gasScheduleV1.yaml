@@ -1,29 +1,29 @@
 BuiltInCost:
-  Transfer: 2000000
-  CreateAsset: 150000000000
-  CreateValidator: 500000000000
-  ValidatorConfig: 50000000000
-  Freeze: 2000000
-  Unfreeze: 2000000
-  Delegate: 2000000
-  Undelegate: 2000000
-  Withdraw: 2000000
-  Claim: 2000000
-  Unjail: 500000000000
-  AssetTrigger: 3000000
-  SetAccountName: 3000000
-  Proposal: 5000000
-  Vote: 2000000
-  ConfigITO: 150000000000
-  Buy: 2000000
-  Sell: 3000000
-  CancelMarketOrder: 300000
-  CreateMarketplace: 500000000000
-  ConfigMarketplace: 10000000000
-  UpdateAccountPermission: 10000000000
-  Deposit: 50000000
-  ITOTrigger: 10000000
-  ChangeOwnerAddress: 2000000
+  Transfer: 200000
+  CreateAsset: 300000000
+  CreateValidator: 100000000000
+  ValidatorConfig: 100000000000
+  Freeze: 200000
+  Unfreeze: 200000
+  Delegate: 200000
+  Undelegate: 200000
+  Withdraw: 200000
+  Claim: 200000
+  Unjail: 100000000000
+  AssetTrigger: 200000
+  SetAccountName: 1000000
+  Proposal: 300000000
+  Vote: 200000
+  ConfigITO: 300000000
+  Buy: 200000
+  Sell: 300000
+  CancelMarketOrder: 1000000
+  CreateMarketplace: 300000000
+  ConfigMarketplace: 6000000
+  UpdateAccountPermission: 10000000
+  Deposit: 500000
+  ITOTrigger: 200000
+  ChangeOwnerAddress: 1000000
 
 BaseOperationCost:
   StorePerByte: 10000
@@ -38,7 +38,6 @@ BaseOpsAPICost:
   GetSCAddress: 100
   GetOwnerAddress: 5000
   GetCurrentTxHash: 100
-  GetPrevTxHash: 10
   IsSmartContract: 5000
   GetExternalBalance: 7000
   GetBlockHash: 10000
@@ -78,6 +77,10 @@ BaseOpsAPICost:
   DeleteFromReturnData: 100
   GetCodeMetadata: 10
   IsBuiltinFunction: 10
+  GetKDATokenData: 15000
+  GetUserKDA: 9000
+  GetSFTMetadata: 5000
+  GetKDARoles: 4000
 
 EthAPICost:
   UseGas: 100
@@ -198,6 +201,13 @@ ManagedBufferAPICost:
   MBufferSetRandom: 6000
   MBufferToBigFloat: 2000
   MBufferFromBigFloat: 2000
+
+ManagedMapAPICost:
+  ManagedMapNew: 10000
+  ManagedMapPut: 10000
+  ManagedMapGet: 10000
+  ManagedMapRemove: 10000
+  ManagedMapContains: 10000
 
 BigFloatAPICost:
   BigFloatNewFromParts: 3000
