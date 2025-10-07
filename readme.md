@@ -41,7 +41,7 @@ This automatically:
 python setup.py setup-all -n 3
 
 # Setup with custom max supply
-python setup.py setup-all -n 5 -s 20000000000000000
+python setup.py setup-all -n 5 -s 10000000000000000
 ```
 
 ### Monitor the Network
