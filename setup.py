@@ -177,13 +177,6 @@ class SetupManager:
             '--key-type', 'both'
         ]
 
-        # Add user mapping only on Linux/Mac
-        if not self.is_windows:
-            uid = os.getuid()
-            gid = os.getgid()
-            cmd.insert(4, '--user')
-            cmd.insert(5, f'{uid}:{gid}')
-
         self.print_info(f"Running: docker run ... keygenerator --num-keys {self.validators_num}")
         self.run_command(cmd)
         self.print_success("Keys generated successfully!")
