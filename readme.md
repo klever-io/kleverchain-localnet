@@ -41,6 +41,16 @@ This automatically:
 3. ✓ Creates necessary directories
 4. ✓ Generates configuration files
 
+after execution of setup-all you can run your localnet
+
+```bash
+# Linux/macOS
+python3 setup.py start
+
+# Windows
+python setup.py start
+```
+
 
 ### With Custom Configuration
 
@@ -173,6 +183,5 @@ fast-node-setup/
 ├── scripts/           # Helper scripts
 ├── docker-compose.yaml   # Generated Docker Compose file
 ├── setup.py          # Cross-platform setup script
-├── Makefile          # Alternative Make-based setup (Linux only)
-└── README.md
+└── readme.md
 ```
