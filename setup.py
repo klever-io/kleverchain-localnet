@@ -220,7 +220,7 @@ class SetupManager:
 
         self.print_success("Configuration generated successfully!")
 
-    def compose_up(self):
+    def start(self):
         """Start Docker containers"""
         self.print_header("Starting Docker Containers")
 
@@ -237,7 +237,7 @@ class SetupManager:
         self.print_success("Containers started successfully!")
         self.print_info("Run 'python setup.py status' to check container status")
 
-    def compose_down(self):
+    def down(self):
         """Stop Docker containers"""
         self.print_header("Stopping Docker Containers")
 
@@ -245,7 +245,7 @@ class SetupManager:
         self.run_command(['docker', 'compose', 'down'])
         self.print_success("Containers stopped!")
 
-    def compose_restart(self):
+    def restart(self):
         """Restart Docker containers"""
         self.print_header("Restarting Docker Containers")
 
@@ -333,14 +333,15 @@ class SetupManager:
         self.generate_keys()
         self.generate_dirs()
         self.create_localnet()
-        self.compose_up()
 
         self.print_header("Setup Complete!")
         print(f"{Colors.GREEN}Your Klever localnet is now running!{Colors.RESET}\n")
         print(f"Next steps:")
+        print(f"  • Run Blockchain status: {Colors.CYAN}python setup.py start{Colors.RESET}")
+        print(f"After run:")
         print(f"  • Check status: {Colors.CYAN}python setup.py status{Colors.RESET}")
         print(f"  • View logs:    {Colors.CYAN}python setup.py logs{Colors.RESET}")
-        print(f"  • Stop nodes:   {Colors.CYAN}python setup.py compose-down{Colors.RESET}")
+        print(f"  • Stop nodes:   {Colors.CYAN}python setup.py stop{Colors.RESET}")
         print()
 
 
@@ -354,7 +355,7 @@ Examples:
   %(prog)s setup-all                          # Complete setup with defaults
   %(prog)s setup-all -n 3                     # Setup with 3 validators
   %(prog)s generate-keys -n 5                 # Generate keys for 5 validators
-  %(prog)s compose-up                         # Start containers
+  %(prog)s start                              # Start containers
   %(prog)s status                             # Check status
   %(prog)s logs                               # View logs
   %(prog)s clean-all                          # Clean everything
@@ -365,9 +366,9 @@ Available commands:
   generate-keys     Generate validator and wallet keys
   generate-dirs     Generate node directories (dbs, logs)
   create-localnet   Generate configuration files
-  compose-up        Start Docker containers
-  compose-down      Stop Docker containers
-  compose-restart   Restart Docker containers
+  start        Start Docker containers
+  stop     Stop Docker containers
+  restart   Restart Docker containers
   status            Show container status
   logs              Show container logs (use --no-follow to disable following)
   clean             Clean generated configs
@@ -415,9 +416,9 @@ Available commands:
         'generate-keys': manager.generate_keys,
         'generate-dirs': manager.generate_dirs,
         'create-localnet': manager.create_localnet,
-        'compose-up': manager.compose_up,
-        'compose-down': manager.compose_down,
-        'compose-restart': manager.compose_restart,
+        'start': manager.start,
+        'stop': manager.stop,
+        'restart': manager.restart,
         'status': manager.status,
         'logs': lambda: manager.logs(follow=not args.no_follow),
         'clean': manager.clean,
