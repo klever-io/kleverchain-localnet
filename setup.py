@@ -237,7 +237,7 @@ class SetupManager:
         self.print_success("Containers started successfully!")
         self.print_info("Run 'python setup.py status' to check container status")
 
-    def down(self):
+    def stop(self):
         """Stop Docker containers"""
         self.print_header("Stopping Docker Containers")
 
