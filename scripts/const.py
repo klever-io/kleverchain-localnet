@@ -10,6 +10,14 @@ _GENESIS_JSON_ELEMENT = """
     }
 """
 
+_GENESIS_ROOT_ELEMENT = """
+    {
+        "address": "%s",
+        "balance": %d,
+        "kfiBalance": %d
+    }
+"""
+
 _GENESIS = """
     [
     %s
@@ -41,7 +49,7 @@ _COMPOSER_BASE = """
 version: '3'
 services:
   seednode:
-    image: kleverapp/klever-go:v1.7.14-0-g22769b30
+    image: kleverapp/klever-go:v1.7.16-0-gcf9f612c
     container_name: seednode
     restart: unless-stopped
     volumes:
@@ -64,7 +72,7 @@ networks:
 
 _COMPOSER_NODES = """
   node%s:
-      image: kleverapp/klever-go:v1.7.14-0-g22769b30
+      image: kleverapp/klever-go:v1.7.16-0-gcf9f612c
       container_name: node%s
       restart: unless-stopped
       networks:

@@ -9,19 +9,21 @@ max_supply = int(os.getenv("MAX_SUPPLY", 10_000_000_000_000_000))
 
 validators = {}
 wallets = {}
+root_wallet = None
 
 def read_keys():
+    global root_wallet
+    root_wallet = get_pem_header(os.path.join(base_dir, 'keys', 'walletKey.pem'))
+
     if num_validators == 1:
-        base_validators_path = os.path.join(base_dir, 'keys')
-        for (dirpath, _, _) in  os.walk(base_validators_path):
-            node_name = "node-0"
+        node_name = "node-0"
+        dirpath = os.path.join(base_dir, 'keys', node_name)
 
-            # Get validator public key
-            pubkey = get_pem_header(os.path.join(dirpath, "validatorKey.pem"))
-            address = get_pem_header(os.path.join(dirpath, "walletKey.pem"))
+        pubkey = get_pem_header(os.path.join(dirpath, "validatorKey.pem"))
+        address = get_pem_header(os.path.join(dirpath, "walletKey.pem"))
 
-            validators[node_name] = {"path": dirpath, "pubkey": pubkey}
-            wallets[node_name] = {"path": dirpath, "address": address}
+        validators[node_name] = {"path": dirpath, "pubkey": pubkey}
+        wallets[node_name] = {"path": dirpath, "address": address}
     else:
         base_validators_path = os.path.join(base_dir, 'keys')
         for (dirpath, _, _) in  os.walk(base_validators_path):
@@ -65,7 +67,8 @@ def main():
     # generate genesis
     generate_genesis(wallets=orderedWallets,
                      klv_supply=max_supply,
-                     path=base_dir
+                     path=base_dir,
+                     root_wallet=root_wallet
                      )
 
     print("Generating Nodes Setup...")
