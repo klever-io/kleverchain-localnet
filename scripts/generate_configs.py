@@ -2,23 +2,27 @@ import json
 import os
 
 from datetime import datetime
-from const import _GENESIS_JSON_ELEMENT,_NODE_SETUP_JSON_ELEMENT,_GENESIS,_NODE_SETUP
+from const import _GENESIS_JSON_ELEMENT,_GENESIS_ROOT_ELEMENT,_NODE_SETUP_JSON_ELEMENT,_GENESIS,_NODE_SETUP
 
-def generate_genesis(wallets,klv_supply,path):
+def generate_genesis(wallets, klv_supply, path, root_wallet=None):
     klvDelegation = 10_000_000_000_000
     kfiSupply = 21_000_000_000_000
+    root_klv = 1_000_000_000_000 if root_wallet else 0
+    root_kfi = 1_000_000_000_000 if root_wallet else 0
 
     totalStaking = klvDelegation * len(wallets)
-    eachKLV = (int(klv_supply) - totalStaking) // len(wallets)
-    eachKFI = kfiSupply // len(wallets)
+    eachKLV = (int(klv_supply) - totalStaking - root_klv) // len(wallets)
+    eachKFI = (kfiSupply - root_kfi) // len(wallets)
 
     wallet_text = ''
-    for index,wallet in enumerate(wallets):
+    for index, wallet in enumerate(wallets):
         wallet_text += _GENESIS_JSON_ELEMENT % (wallet, eachKLV, eachKFI, wallet, klvDelegation)
+        wallet_text += ","
 
-        if (index != len(wallets)-1):
-            wallet_text += ","
-    
+    if root_wallet:
+        wallet_text += _GENESIS_ROOT_ELEMENT % (root_wallet, 1_000_000_000_000, 1_000_000_000_000)
+    else:
+        wallet_text = wallet_text.rstrip(",")
 
     genesis_raw = _GENESIS % wallet_text
 

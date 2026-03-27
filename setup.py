@@ -167,18 +167,41 @@ class SetupManager:
                 volume_path = f"/{drive.lower()}{path}"
             volume_mount = f"{volume_path}:/opt/klever-blockchain"
 
-        cmd = [
+        for i in range(self.validators_num):
+            node_dir = keys_dir / f'node-{i}'
+            node_dir.mkdir(parents=True, exist_ok=True)
+
+            node_volume = f"{node_dir.absolute()}:/opt/klever-blockchain"
+            if self.is_windows:
+                node_path = str(node_dir.absolute()).replace('\\', '/')
+                if ':' in node_path:
+                    drive, path = node_path.split(':', 1)
+                    node_path = f"/{drive.lower()}{path}"
+                node_volume = f"{node_path}:/opt/klever-blockchain"
+
+            self.print_info(f"Generating keys for node-{i}...")
+            self.run_command([
+                'docker', 'run', '--rm',
+                '-v', node_volume,
+                '--entrypoint', '',
+                'kleverapp/klever-go:latest',
+                'keygenerator',
+                '--num-keys', '1',
+                '--key-type', 'both'
+            ])
+
+        # Generate 1 root wallet directly in keys/
+        self.print_info("Generating root wallet key...")
+        self.run_command([
             'docker', 'run', '--rm',
             '-v', volume_mount,
             '--entrypoint', '',
             'kleverapp/klever-go:latest',
             'keygenerator',
-            '--num-keys', str(self.validators_num),
-            '--key-type', 'both'
-        ]
+            '--num-keys', '1',
+            '--key-type', 'wallet'
+        ])
 
-        self.print_info(f"Running: docker run ... keygenerator --num-keys {self.validators_num}")
-        self.run_command(cmd)
         self.print_success("Keys generated successfully!")
 
     def generate_dirs(self):
@@ -308,6 +331,8 @@ class SetupManager:
             self.base_dir / 'configs',
             self.base_dir / 'docker-compose.yml',
             self.base_dir / 'docker-compose.yaml',
+            self.base_dir / 'config' / 'node' / 'genesis.json',
+            self.base_dir / 'config' / 'node' / 'nodesSetup.json',
         ]
 
         for item in items_to_remove:
