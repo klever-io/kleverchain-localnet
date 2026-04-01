@@ -10,8 +10,8 @@ def generate_compose(validators):
     for _,value in validators.items():
         index_with_zero = index if index >= 10 else f"0{index}"
 
-        # Convert Windows path to Docker-compatible format
-        path = value['path']
+        # Use relative path so docker-compose works on any OS/user
+        path = os.path.relpath(value['path'])
         if is_windows:
             # Convert backslashes to forward slashes for Docker
             path = path.replace('\\', '/')
@@ -20,7 +20,7 @@ def generate_compose(validators):
                 drive = path[0].lower()
                 path = f"/{drive}{path[2:]}"
 
-        nodes_data += _COMPOSER_NODES % (index, index,index_with_zero, index_with_zero, path, index, index,index_with_zero)
+        nodes_data += _COMPOSER_NODES % (index, index, index_with_zero, index_with_zero, path, path, index, index, index_with_zero)
         index = index + 1
 
     compose = _COMPOSER_BASE % nodes_data
