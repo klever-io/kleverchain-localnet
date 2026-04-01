@@ -22,7 +22,7 @@ def generate_compose(validators):
         else:
             path = f"./{path}"
 
-        nodes_data.append(_COMPOSER_NODES % (index, index, index_with_zero, index_with_zero, path, path, index, index, index_with_zero))
+        nodes_data.append(_COMPOSER_NODES % (index, index, index_with_zero, index_with_zero, path, index, index, index_with_zero))
         index += 1
 
     compose = _COMPOSER_BASE % ''.join(nodes_data)

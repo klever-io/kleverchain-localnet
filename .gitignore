@@ -7,3 +7,5 @@ __pycache__
 genesis.json
 nodesSetup.json
 docker-compose.yaml
+**/walletKey.pem
+**/validatorKey.pem
