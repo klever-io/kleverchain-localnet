@@ -17,10 +17,10 @@ Cross-platform setup script for running Klever blockchain nodes locally. Works o
 
 ### For Linux users
 
-Maybe you need to give permissions to dbs/ logs/ and keys/ to the nodes have permissions after setup localnet.
+Before you start the nodes you need give permissions to dbs/ logs/ and keys/ to the nodes have permissions after setup localnet.
 
 ```bash
-  chmod -R 777 dbs/* keys/* logs/*
+  sudo chown -R 999 .
 ```
 
 ### Complete Setup (One Command)
@@ -121,6 +121,11 @@ python setup.py clean
 # Remove EVERYTHING (keys, dbs, logs, configs) - DESTRUCTIVE!
 python setup.py clean-all
 ```
+
+> **Troubleshooting:** If `clean-all` fails with a permission error, run it with `sudo`:
+> ```bash
+> sudo python setup.py clean-all
+> ```
 
 ### Help
 

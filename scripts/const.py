@@ -81,13 +81,12 @@ _COMPOSER_NODES = """
         - 88%s:88%s
       volumes:
         - ./config/node:/opt/klever-blockchain/config/node
-        - %s/validatorKey.pem:/opt/klever-blockchain/config/validatorKey.pem
+        - %s/validatorKey.pem:/opt/klever-blockchain/config/node/validatorKey.pem
         - ./dbs/node-%s/:/opt/klever-blockchain/db
         - ./logs/node-%s:/opt/klever-blockchain/logs
       entrypoint: /usr/local/bin/validator
       command: [
         "--log-level=*:INFO",
         "--use-log-view",
-        "--validator-key-pem-file=./config/validatorKey.pem",
         "--rest-api-interface=0.0.0.0:88%s"
       ]"""

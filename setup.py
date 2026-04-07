@@ -147,6 +147,12 @@ class SetupManager:
         self.print_success("\nAll requirements satisfied!")
         return True
 
+    def _docker_user_args(self):
+        """Return --user uid:gid args for docker run on Linux to avoid root-owned output files."""
+        if self.is_linux:
+            return ['--user', f'{os.getuid()}:{os.getgid()}']
+        return []
+
     def generate_keys(self):
         """Generate validator and wallet keys using Docker"""
         self.print_header(f"Generating Keys for {self.validators_num} Validator(s)")
@@ -167,6 +173,8 @@ class SetupManager:
                 volume_path = f"/{drive.lower()}{path}"
             volume_mount = f"{volume_path}:/opt/klever-blockchain"
 
+        user_args = self._docker_user_args()
+
         for i in range(self.validators_num):
             node_dir = keys_dir / f'node-{i}'
             node_dir.mkdir(parents=True, exist_ok=True)
@@ -183,6 +191,7 @@ class SetupManager:
             self.run_command([
                 'docker', 'run', '--rm',
                 '-v', node_volume,
+                *user_args,
                 '--entrypoint', '',
                 'kleverapp/klever-go:latest',
                 'keygenerator',
@@ -195,6 +204,7 @@ class SetupManager:
         self.run_command([
             'docker', 'run', '--rm',
             '-v', volume_mount,
+            *user_args,
             '--entrypoint', '',
             'kleverapp/klever-go:latest',
             'keygenerator',
