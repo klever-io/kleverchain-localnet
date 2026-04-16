@@ -61,7 +61,7 @@ func TestDetect_Ready(t *testing.T) {
 func TestDetect_Running(t *testing.T) {
 	dir := t.TempDir()
 	probe := &fakeProbe{services: []detect.DockerService{
-		{Name: "seednode", State: "running", Health: "healthy"},
+		{Name: "seednode", State: "running", Health: ""},
 		{Name: "node0", State: "running", Health: "healthy"},
 	}}
 

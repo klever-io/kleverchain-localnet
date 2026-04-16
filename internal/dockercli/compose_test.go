@@ -8,7 +8,7 @@ import (
 
 func TestParseComposePS_JSONL(t *testing.T) {
 	input := []byte(`{"ID":"abc","Name":"node0","Service":"node0","Image":"x","State":"running","Health":"healthy","ExitCode":0,"Ports":"0.0.0.0:8800->8800/tcp"}
-{"ID":"def","Name":"seednode","Service":"seednode","Image":"x","State":"running","Health":"healthy","ExitCode":0,"Ports":""}
+{"ID":"def","Name":"seednode","Service":"seednode","Image":"x","State":"running","Health":"","ExitCode":0,"Ports":""}
 `)
 	svc, err := parseComposePS(input)
 	require.NoError(t, err)
