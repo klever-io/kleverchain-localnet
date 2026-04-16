@@ -1,0 +1,85 @@
+version: 2
+
+project_name: localnet
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: localnet
+    main: ./cmd/localnet
+    binary: localnet
+    env:
+      - CGO_ENABLED=0
+    goos: [linux, darwin, windows]
+    goarch: [amd64, arm64]
+    ignore:
+      - goos: windows
+        goarch: arm64
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+      - -X github.com/klever-io/kleverchain-localnet/internal/version.Version={{ .Version }}
+      - -X github.com/klever-io/kleverchain-localnet/internal/version.Commit={{ .ShortCommit }}
+      - -X github.com/klever-io/kleverchain-localnet/internal/version.Date={{ .Date }}
+
+archives:
+  - id: localnet
+    name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
+    formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    files:
+      - readme.md
+      - LICENSE*
+      - config/**/*
+
+checksum:
+  name_template: "{{ .ProjectName }}_{{ .Version }}_checksums.txt"
+  algorithm: sha256
+
+sboms:
+  - id: default
+    artifacts: archive
+
+changelog:
+  use: github
+  sort: asc
+  groups:
+    - title: Features
+      regexp: '^.*?feat(\(.+\))??!?:.+$'
+      order: 0
+    - title: Bug fixes
+      regexp: '^.*?fix(\(.+\))??!?:.+$'
+      order: 1
+    - title: Other
+      order: 999
+  filters:
+    exclude:
+      - "^docs:"
+      - "^chore:"
+      - "^test:"
+
+release:
+  github:
+    owner: klever-io
+    name: kleverchain-localnet
+  name_template: "localnet v{{ .Version }}"
+  draft: false
+  prerelease: auto
+
+brews:
+  - repository:
+      owner: klever-io
+      name: homebrew-tap
+    homepage: "https://github.com/klever-io/kleverchain-localnet"
+    description: "Run a multi-validator Klever blockchain localnet locally"
+    license: "MIT"
+    install: |
+      bin.install "localnet"
+    test: |
+      system "#{bin}/localnet", "version"
