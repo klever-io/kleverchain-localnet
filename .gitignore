@@ -1,11 +1,19 @@
-wallets/*
-keys/*
-validators/*
-logs/*
-dbs/*
-__pycache__
+/keys
+/dbs
+/logs
 genesis.json
 nodesSetup.json
 docker-compose.yaml
+docker-compose.yml
 **/walletKey.pem
 **/validatorKey.pem
+.localnet-state.yaml
+
+# Go
+bin/
+dist/
+coverage.out
+coverage.html
+*.test
+*.out
+vendor/
