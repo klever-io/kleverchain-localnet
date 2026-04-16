@@ -8,12 +8,6 @@ services:
     entrypoint: /usr/local/bin/seednode
     command:
       - "--rest-api-interface=0.0.0.0:{{ .SeednodeRESTPort }}"
-    healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:{{ .SeednodeRESTPort }}/node/status || exit 1"]
-      interval: 10s
-      timeout: 3s
-      retries: 5
-      start_period: 20s
     mem_limit: {{ .MemLimit }}
     cpus: {{ .CPUs }}
     logging:
@@ -31,8 +25,7 @@ services:
     container_name: node{{ .Index }}
     restart: unless-stopped
     depends_on:
-      seednode:
-        condition: service_healthy
+      - seednode
     networks:
       - {{ $.NetworkName }}
     ports:

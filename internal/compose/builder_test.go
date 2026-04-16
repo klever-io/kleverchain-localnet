@@ -98,8 +98,8 @@ func TestBuildCompose_Healthchecks(t *testing.T) {
 	require.NoError(t, err)
 	out, err := compose.Build(state, services, compose.DefaultResources())
 	require.NoError(t, err)
-	require.Equal(t, 3, strings.Count(out, "healthcheck:"))
-	require.Contains(t, out, "condition: service_healthy")
+	require.Equal(t, 2, strings.Count(out, "healthcheck:"), "only validators should have healthchecks — seednode has no HTTP endpoint")
+	require.NotContains(t, out, "condition: service_healthy", "seednode has no healthcheck so validators cannot wait on service_healthy")
 }
 
 func TestBuildCompose_RejectsBareRelativePath(t *testing.T) {
