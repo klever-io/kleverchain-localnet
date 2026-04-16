@@ -1,0 +1,52 @@
+[
+    {
+        "address": "klv1wallet0",
+        "balance": 1989800000000000,
+        "kfiBalance": 4000000000000,
+        "delegation": {
+            "address": "klv1wallet0",
+            "value": 10000000000000
+        }
+    },
+    {
+        "address": "klv1wallet1",
+        "balance": 1989800000000000,
+        "kfiBalance": 4000000000000,
+        "delegation": {
+            "address": "klv1wallet1",
+            "value": 10000000000000
+        }
+    },
+    {
+        "address": "klv1wallet2",
+        "balance": 1989800000000000,
+        "kfiBalance": 4000000000000,
+        "delegation": {
+            "address": "klv1wallet2",
+            "value": 10000000000000
+        }
+    },
+    {
+        "address": "klv1wallet3",
+        "balance": 1989800000000000,
+        "kfiBalance": 4000000000000,
+        "delegation": {
+            "address": "klv1wallet3",
+            "value": 10000000000000
+        }
+    },
+    {
+        "address": "klv1wallet4",
+        "balance": 1989800000000000,
+        "kfiBalance": 4000000000000,
+        "delegation": {
+            "address": "klv1wallet4",
+            "value": 10000000000000
+        }
+    },
+    {
+        "address": "klv1rootwallet",
+        "balance": 1000000000000,
+        "kfiBalance": 1000000000000
+    }
+]

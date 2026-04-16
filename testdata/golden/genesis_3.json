@@ -1,0 +1,34 @@
+[
+    {
+        "address": "klv1wallet0",
+        "balance": 3323000000000000,
+        "kfiBalance": 6666666666666,
+        "delegation": {
+            "address": "klv1wallet0",
+            "value": 10000000000000
+        }
+    },
+    {
+        "address": "klv1wallet1",
+        "balance": 3323000000000000,
+        "kfiBalance": 6666666666666,
+        "delegation": {
+            "address": "klv1wallet1",
+            "value": 10000000000000
+        }
+    },
+    {
+        "address": "klv1wallet2",
+        "balance": 3323000000000000,
+        "kfiBalance": 6666666666666,
+        "delegation": {
+            "address": "klv1wallet2",
+            "value": 10000000000000
+        }
+    },
+    {
+        "address": "klv1rootwallet",
+        "balance": 1000000000000,
+        "kfiBalance": 1000000000000
+    }
+]
