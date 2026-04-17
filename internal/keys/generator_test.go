@@ -39,7 +39,11 @@ func (f *fakeKeygenRunner) Run(_ context.Context, _ string, args []string, _ doc
 		return dockercli.RunResult{}, fmt.Errorf("no -v mount specified")
 	}
 
-	hostPath := strings.Split(mount, ":")[0]
+	sep := strings.LastIndex(mount, ":")
+	if sep <= 0 {
+		return dockercli.RunResult{}, fmt.Errorf("invalid -v mount %q", mount)
+	}
+	hostPath := mount[:sep]
 	if err := os.MkdirAll(hostPath, 0o700); err != nil {
 		return dockercli.RunResult{}, err
 	}
