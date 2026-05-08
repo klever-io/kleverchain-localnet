@@ -73,6 +73,10 @@ func (c *Client) ComposeRestart(ctx context.Context) (RunResult, error) {
 	return c.runDockerCompose(ctx, []string{"restart"})
 }
 
+func (c *Client) ComposePull(ctx context.Context) (RunResult, error) {
+	return c.runDockerCompose(ctx, []string{"pull"})
+}
+
 func (c *Client) runDockerCompose(ctx context.Context, sub []string) (RunResult, error) {
 	if _, err := FindComposeFile(c.workDir); err != nil {
 		return RunResult{}, err
