@@ -16,6 +16,11 @@ const (
 	KLVDenomination             = 6
 	MinTransactionVersion       = 1
 
+	// MinStartHeadroomSeconds is the minimum gap between "now" and genesis startTime
+	// that `localnet start` enforces on a fresh-genesis run. Validators that boot after
+	// genesis enter inSync state and the chain stalls indefinitely.
+	MinStartHeadroomSeconds int64 = 30
+
 	SeednodeStaticIP  = "172.25.0.5"
 	SeednodeRESTPort  = 8799
 	SeednodeP2PPort   = 37373
