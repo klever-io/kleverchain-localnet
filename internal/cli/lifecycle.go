@@ -5,11 +5,12 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/spf13/cobra"
+
 	"github.com/klever-io/kleverchain-localnet/internal/domain"
 	"github.com/klever-io/kleverchain-localnet/internal/fsutil"
 	"github.com/klever-io/kleverchain-localnet/internal/nodes"
 	"github.com/klever-io/kleverchain-localnet/internal/state"
-	"github.com/spf13/cobra"
 )
 
 func newStartCommand(app *AppContext) *cobra.Command {

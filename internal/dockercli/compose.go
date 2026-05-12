@@ -89,12 +89,12 @@ func (c *Client) runDockerCompose(ctx context.Context, sub []string) (RunResult,
 }
 
 type composePSJSON struct {
-	ID       string `json:"ID"`
-	Name     string `json:"Name"`
-	Service  string `json:"Service"`
-	Image    string `json:"Image"`
-	State    string `json:"State"`
-	Health   string `json:"Health"`
+	ID       string          `json:"ID"`
+	Name     string          `json:"Name"`
+	Service  string          `json:"Service"`
+	Image    string          `json:"Image"`
+	State    string          `json:"State"`
+	Health   string          `json:"Health"`
 	ExitCode int             `json:"ExitCode"`
 	Ports    json.RawMessage `json:"Publishers"` // Docker Compose v2 emits this as a string on some versions and an array of objects on others (Compose >= 2.10 on Windows). The struct never reads this field; PortsStr (json:"Ports") is the canonical port list. Keep as RawMessage so unmarshal accepts both shapes.
 	PortsStr string          `json:"Ports"`
