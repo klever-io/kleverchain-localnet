@@ -181,7 +181,13 @@ func TestGenerator_PEMPermissions(t *testing.T) {
 	pem := filepath.Join(dir, "node-0", "validatorKey.pem")
 	info, err := os.Stat(pem)
 	require.NoError(t, err)
-	require.Equal(t, os.FileMode(0o600), info.Mode().Perm())
+	expectedPEM := os.FileMode(0o600)
+	if runtime.GOOS == "linux" {
+		// On Linux, validator keys must be readable by the in-container `klever` user
+		// (uid 999), so they're loosened to 0644. Wallet keys stay 0600.
+		expectedPEM = 0o644
+	}
+	require.Equal(t, expectedPEM, info.Mode().Perm())
 
 	nodeDir := filepath.Join(dir, "node-0")
 	info, err = os.Stat(nodeDir)

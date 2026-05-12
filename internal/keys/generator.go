@@ -212,6 +212,13 @@ func tightenPerms(path string) error {
 			return os.Chmod(p, 0o700)
 		}
 		if filepath.Ext(p) == ".pem" {
+			// validatorKey.pem files are bind-mounted into validator containers that run
+			// as image-default `klever` (uid 999); on Linux those containers cannot read a
+			// 0600 host-owned file. Use 0644 (world-readable) so the in-container user can
+			// read its own key. Wallet keys stay 0600 — they're only consumed by host scripts.
+			if runtime.GOOS == "linux" && filepath.Base(p) == "validatorKey.pem" {
+				return os.Chmod(p, 0o644)
+			}
 			return os.Chmod(p, 0o600)
 		}
 		return nil
