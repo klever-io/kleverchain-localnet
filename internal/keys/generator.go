@@ -99,7 +99,10 @@ func (g *Generator) dockerRunArgs(volumeMount, name string, keygenArgs ...string
 		"--name", name,
 	}
 	if g.IsLinux {
-		args = append(args, "--user", strconv.Itoa(g.UID)+":"+strconv.Itoa(g.GID))
+		args = append(args,
+			"--user", strconv.Itoa(g.UID)+":"+strconv.Itoa(g.GID),
+			"--group-add", "klever",
+		)
 	}
 	args = append(args,
 		"--entrypoint", "",

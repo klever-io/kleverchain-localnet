@@ -151,14 +151,19 @@ func TestGenerator_LinuxUserArgs(t *testing.T) {
 	require.NoError(t, err)
 
 	foundUser := false
+	foundGroupAdd := false
 	for _, call := range runner.calls {
 		for i, a := range call {
 			if a == "--user" && i+1 < len(call) {
 				foundUser = true
 			}
+			if a == "--group-add" && i+1 < len(call) && call[i+1] == "klever" {
+				foundGroupAdd = true
+			}
 		}
 	}
 	require.True(t, foundUser, "--user flag must be present on Linux")
+	require.True(t, foundGroupAdd, "--group-add klever flag must be present on Linux (image binaries are mode 0550 root:klever)")
 }
 
 func TestGenerator_PEMPermissions(t *testing.T) {
