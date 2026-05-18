@@ -1,0 +1,24 @@
+{
+    "startTime": 1713276075,
+    "slotInterval": 4000,
+    "slotsPerEpoch": 20,
+    "consensusGroupSize": 3,
+    "minNodes": 3,
+    "chainID": "22843681",
+    "minTransactionVersion": 1,
+    "klvDenomination": 6,
+    "initialNodes": [
+        {
+            "pubkey": "bls_pubkey_0",
+            "address": "klv1wallet0"
+        },
+        {
+            "pubkey": "bls_pubkey_1",
+            "address": "klv1wallet1"
+        },
+        {
+            "pubkey": "bls_pubkey_2",
+            "address": "klv1wallet2"
+        }
+    ]
+}

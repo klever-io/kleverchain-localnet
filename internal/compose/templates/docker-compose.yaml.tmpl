@@ -1,0 +1,63 @@
+services:
+  seednode:
+    image: {{ .Image }}
+    container_name: seednode
+    restart: unless-stopped
+    volumes:
+      - ./config/seednode:/opt/klever-blockchain/config/seednode
+    entrypoint: /usr/local/bin/seednode
+    command:
+      - "--rest-api-interface=0.0.0.0:{{ .SeednodeRESTPort }}"
+    mem_limit: {{ .MemLimit }}
+    cpus: {{ .CPUs }}
+    logging:
+      driver: json-file
+      options:
+        max-size: "{{ .LogMaxSize }}"
+        max-file: "{{ .LogMaxFile }}"
+    networks:
+      {{ .NetworkName }}:
+        ipv4_address: {{ .SeednodeIP }}
+{{- range .Validators }}
+
+  node{{ .Index }}:
+    image: {{ $.Image }}
+    container_name: node{{ .Index }}
+    restart: unless-stopped
+    depends_on:
+      - seednode
+    networks:
+      - {{ $.NetworkName }}
+    ports:
+      - "{{ .RESTPort }}:{{ .RESTPort }}"
+    volumes:
+      - ./config/node:/opt/klever-blockchain/config/node
+      - {{ .ValidatorKeyPath }}:/opt/klever-blockchain/config/node/validatorKey.pem
+      - ./dbs/node-{{ .Index }}/:/opt/klever-blockchain/db
+      - ./logs/node-{{ .Index }}:/opt/klever-blockchain/logs
+    entrypoint: /usr/local/bin/validator
+    command:
+      - "--log-level=*:INFO"
+      - "--use-log-view"
+      - "--rest-api-interface=0.0.0.0:{{ .RESTPort }}"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:{{ .RESTPort }}/node/status || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+    mem_limit: {{ $.MemLimit }}
+    cpus: {{ $.CPUs }}
+    logging:
+      driver: json-file
+      options:
+        max-size: "{{ $.LogMaxSize }}"
+        max-file: "{{ $.LogMaxFile }}"
+{{- end }}
+
+networks:
+  {{ .NetworkName }}:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: {{ .NetworkSubnet }}

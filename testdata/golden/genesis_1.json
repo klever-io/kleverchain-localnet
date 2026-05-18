@@ -1,0 +1,16 @@
+[
+    {
+        "address": "klv1wallet0",
+        "balance": 9989000000000000,
+        "kfiBalance": 20000000000000,
+        "delegation": {
+            "address": "klv1wallet0",
+            "value": 10000000000000
+        }
+    },
+    {
+        "address": "klv1rootwallet",
+        "balance": 1000000000000,
+        "kfiBalance": 1000000000000
+    }
+]

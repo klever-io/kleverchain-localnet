@@ -1,192 +1,73 @@
-# Klever Fast Node Setup
+# Klever Localnet (`localnet`)
 
-Cross-platform setup script for running Klever blockchain nodes locally. Works on **Linux**, **macOS**, and **Windows**.
+Single-binary tool to run a multi-validator Klever blockchain on your laptop. Linux, macOS, and Windows.
 
-## 📋 Requirements
+## Requirements
 
-### All Platforms
+- Docker 20.10+ and Docker Compose v2 (`docker compose`, not the deprecated `docker-compose`).
+- ~5 GiB free disk space.
 
-- **Docker Desktop** (version 20.10+)
-  - Linux: [Install Docker Engine](https://docs.docker.com/engine/install/)
-  - macOS: [Docker Desktop for Mac](https://docs.docker.com/desktop/install/mac-install/)
-  - Windows: [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/)
-- **Python 3.7+** (for configuration generation scripts)
-  - Verify: `python --version` or `python3 --version`
+## Install
 
-## 🚀 Quick Start
-
-### For Linux users
-
-Before you start the nodes you need give permissions to dbs/ logs/ and keys/ to the nodes have permissions after setup localnet.
+### Homebrew (macOS / Linux)
 
 ```bash
-  sudo chown -R 999 .
+brew install klever-io/tap/localnet
 ```
 
-### Complete Setup (One Command)
+### Direct download
 
-The easiest way to get started:
+Grab the archive for your OS/arch from the [Releases page](https://github.com/klever-io/kleverchain-localnet/releases), extract `localnet`, and place it on your `PATH`.
+
+### Build from source
 
 ```bash
-# Linux/macOS
-python3 setup.py setup-all
-
-# Windows
-python setup.py setup-all
+git clone https://github.com/klever-io/kleverchain-localnet.git
+cd kleverchain-localnet
+make build   # produces ./bin/localnet
 ```
 
-This automatically:
-1. ✓ Checks all requirements
-2. ✓ Generates validator and wallet keys
-3. ✓ Creates necessary directories
-4. ✓ Generates configuration files
-
-after execution of setup-all you can run your localnet
+## Quick start
 
 ```bash
-# Linux/macOS
-python3 setup.py start
+# One-shot: generate keys, configs, compose, then start containers
+localnet run -n 3
 
-# Windows
-python setup.py start
+# Or do it step by step:
+localnet setup-all -n 3
+localnet start
+
+# Inspect
+localnet status
+localnet logs --node 0
+
+# Stop and clean
+localnet stop
+localnet clean-all
 ```
 
+Invoking `localnet` on a terminal with no arguments opens the **TUI dashboard** (splash, main menu, and a live monitor for container health and resource usage). Press `?` in any screen for help. Piping `localnet` to a file instead prints the CLI help — CI-friendly.
 
-### With Custom Configuration
+## Port layout
 
-```bash
-# Setup with 3 validators
-python setup.py setup-all -n 3
+| Service   | REST API port |
+|-----------|---------------|
+| seednode  | 8799          |
+| node0     | 8800          |
+| node1     | 8801          |
+| node-N    | 88NN          |
 
-# Setup with custom max supply
-python setup.py setup-all -n 5 -s 10000000000000000
-```
+All services live on the `klever` bridge network (`172.25.0.0/24`).
 
-### Monitor the Network
+## Command reference
 
-```bash
-# Check container status
-python setup.py status
+Run `localnet --help` for the full tree. Key commands:
 
-# View logs (CTRL+C to exit)
-python setup.py logs
-
-# View logs of specific node
-docker logs -f node-0
-```
-
-## 🔧 Available Commands
-
-### Setup Commands
-
-```bash
-# Complete automated setup
-python setup.py setup-all
-
-# Individual steps
-python setup.py check-requirements    # Verify dependencies
-python setup.py generate-keys -n 3    # Generate keys for 3 validators
-python setup.py generate-dirs -n 3    # Create directories
-python setup.py create-localnet -n 3  # Generate configs
-```
-
-### Container Management
-
-```bash
-# Start containers
-python setup.py start
-
-# Stop containers
-python setup.py down
-
-# Restart containers
-python setup.py restart
-
-# Check status
-python setup.py status
-
-# View logs
-python setup.py logs
-
-# View logs without following
-python setup.py logs --no-follow
-```
-
-### Cleanup
-
-```bash
-# Remove generated configs only
-python setup.py clean
-
-# Remove EVERYTHING (keys, dbs, logs, configs) - DESTRUCTIVE!
-python setup.py clean-all
-```
-
-> **Troubleshooting:** If `clean-all` fails with a permission error, run it with `sudo`:
-> ```bash
-> sudo python setup.py clean-all
-> ```
-
-### Help
-
-```bash
-# Show all commands and options
-python setup.py -h
-```
-
-## 🛠️ Advanced Usage
-
-### Resetting the Blockchain
-
-To completely reset the blockchain state:
-
-```bash
-# Clean everything and start fresh
-python setup.py clean-all
-python setup.py setup-all
-```
-
-### Custom Configuration
-
-You can modify generated files before starting:
-
-```bash
-# Generate everything but don't start
-python setup.py generate-keys -n 3
-python setup.py generate-dirs -n 3
-python setup.py create-localnet -n 3
-
-# Modify configs/genesis.json or docker-compose.yaml as needed
-# Edit configs/nodesSetup.json to change startTime if needed
-
-# Then start
-python setup.py start
-```
-
-## 📁 Project Structure
-
-```
-fast-node-setup/
-├── keys/              # Generated validator and wallet keys
-│   ├── node-0/
-│   │   ├── validatorKey.pem
-│   │   └── walletKey.pem
-│   ├── node-1/
-│   └── ...
-├── dbs/               # Blockchain databases
-│   ├── node-0/
-│   ├── node-1/
-│   └── ...
-├── logs/              # Node logs
-│   ├── node-0/
-│   ├── node-1/
-│   └── ...
-├── configs/           # Generated configuration files
-│   ├── genesis.json
-│   ├── nodesSetup.json
-│   └── ...
-├── scripts/           # Helper scripts
-├── docker-compose.yaml   # Generated Docker Compose file
-├── setup.py          # Cross-platform setup script
-└── readme.md
-```
+- `localnet run` — zero-to-running (doctor + keys + configs + compose + start).
+- `localnet setup-all` — same as `run` without starting.
+- `localnet start` / `stop` / `restart` — lifecycle.
+- `localnet status` — container state + ports as a table.
+- `localnet logs --node N` — tail logs for a specific node (use `--no-follow` for one-shot output).
+- `localnet monitor` — open the live TUI dashboard directly.
+- `localnet doctor` — verify Docker + disk + group membership.
+- `localnet clean` / `clean-all` — remove generated artifacts (`clean-all` also wipes keys/dbs/logs and prompts for confirmation).
