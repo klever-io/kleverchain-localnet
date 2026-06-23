@@ -106,6 +106,11 @@ func (c *Client) ComposeVersion(ctx context.Context) (ComposeInfo, error) {
 	return ComposeInfo{Raw: strings.TrimSpace(out), Major: maj, Minor: mnr, Patch: pat}, nil
 }
 
+func (c *Client) ImageExists(ctx context.Context, image string) bool {
+	_, err := c.run(ctx, []string{"image", "inspect", image}, io.Discard, io.Discard)
+	return err == nil
+}
+
 func (c *Client) Run(ctx context.Context, args []string) (RunResult, error) {
 	res, err := c.run(ctx, args, nil, nil)
 	if err != nil {

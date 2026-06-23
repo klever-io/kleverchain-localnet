@@ -1,8 +1,10 @@
 services:
   seednode:
-    image: {{ .Image }}
+    image: {{ .SeednodeImage }}
     container_name: seednode
+{{- if .Restart }}
     restart: unless-stopped
+{{- end }}
     volumes:
       - ./config/seednode:/opt/klever-blockchain/config/seednode
     entrypoint: /usr/local/bin/seednode
@@ -23,7 +25,9 @@ services:
   node{{ .Index }}:
     image: {{ $.Image }}
     container_name: node{{ .Index }}
+{{- if $.Restart }}
     restart: unless-stopped
+{{- end }}
     depends_on:
       - seednode
     networks:

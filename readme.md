@@ -71,3 +71,12 @@ Run `localnet --help` for the full tree. Key commands:
 - `localnet monitor` — open the live TUI dashboard directly.
 - `localnet doctor` — verify Docker + disk + group membership.
 - `localnet clean` / `clean-all` — remove generated artifacts (`clean-all` also wipes keys/dbs/logs and prompts for confirmation).
+
+### Flags
+
+`run`, `setup-all`, `config generate`, and `compose generate` accept:
+
+- `--image <ref>` — docker image for the **validator** node containers (default: the version pinned in this build). The seednode and key-generation containers always use the default pinned image, since custom/slim builds may not include the `seednode` and `keygenerator` binaries.
+- `--no-restart` — omit `restart: unless-stopped` from generated `docker-compose.yaml` services.
+
+Other config flags: `-n/--validators`, `-s/--max-supply`, `--consensus-group-size`, `--start-time`, `--min-nodes`. See `localnet setup-all --help` for details.

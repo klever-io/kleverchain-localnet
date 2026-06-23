@@ -23,6 +23,8 @@ type configFlags struct {
 	ConsensusGroupSize int
 	StartTime          int64
 	MinNodes           int
+	Image              string
+	NoRestart          bool
 }
 
 func newConfigCommand(app *AppContext) *cobra.Command {
@@ -51,6 +53,8 @@ func bindConfigFlags(cmd *cobra.Command, cf *configFlags) {
 	cmd.Flags().IntVar(&cf.ConsensusGroupSize, "consensus-group-size", 0, "consensus group size (default: validators)")
 	cmd.Flags().Int64Var(&cf.StartTime, "start-time", 0, "unix seconds; rounded up to next 75s boundary")
 	cmd.Flags().IntVar(&cf.MinNodes, "min-nodes", 0, "minimum nodes for block production")
+	cmd.Flags().StringVar(&cf.Image, "image", "", "klever-go docker image to use (default: "+domain.KleverImage+")")
+	cmd.Flags().BoolVar(&cf.NoRestart, "no-restart", false, "omit restart: unless-stopped from generated services")
 }
 
 func runConfigGenerate(cmd *cobra.Command, app *AppContext, cf *configFlags) error {
@@ -59,7 +63,7 @@ func runConfigGenerate(cmd *cobra.Command, app *AppContext, cf *configFlags) err
 		return err
 	}
 
-	g := keys.NewGenerator(dockercli.NewExecRunner(), st.KleverImage)
+	g := keys.NewGenerator(dockercli.NewExecRunner(), domain.KleverImage)
 	kr, err := g.Generate(cmd.Context(), st, app.KeysDir(), false)
 	if err != nil {
 		return err
@@ -126,6 +130,9 @@ func resolveStateForConfig(app *AppContext, cf *configFlags) (domain.LocalnetSta
 	if cf.StartTime > 0 {
 		st.StartTime = cf.StartTime
 	}
+	if cf.Image != "" {
+		st.KleverImage = cf.Image
+	}
 	if st.KleverImage == "" {
 		st.KleverImage = domain.KleverImage
 	}
@@ -135,7 +142,7 @@ func resolveStateForConfig(app *AppContext, cf *configFlags) (domain.LocalnetSta
 	return st, nil
 }
 
-func runComposeGenerate(app *AppContext) error {
+func runComposeGenerate(app *AppContext, noRestart bool) error {
 	if !state.Exists(app.StateFilePath()) {
 		return fmt.Errorf("state file not found; run `localnet config generate` first")
 	}
@@ -152,7 +159,9 @@ func runComposeGenerate(app *AppContext) error {
 	if err != nil {
 		return err
 	}
-	out, err := compose.Build(st, services, compose.DefaultResources())
+	res := compose.DefaultResources()
+	res.Restart = !noRestart
+	out, err := compose.Build(st, services, res)
 	if err != nil {
 		return err
 	}
@@ -164,13 +173,15 @@ func runComposeGenerate(app *AppContext) error {
 }
 
 func newComposeCommand(app *AppContext) *cobra.Command {
+	var noRestart bool
 	generate := &cobra.Command{
 		Use:   "generate",
 		Short: "Generate docker-compose.yaml",
 		RunE: func(_ *cobra.Command, _ []string) error {
-			return runComposeGenerate(app)
+			return runComposeGenerate(app, noRestart)
 		},
 	}
+	generate.Flags().BoolVar(&noRestart, "no-restart", false, "omit restart: unless-stopped from generated services")
 	wrapper := &cobra.Command{
 		Use:   "compose",
 		Short: "Docker Compose file generation",
