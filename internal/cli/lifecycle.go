@@ -51,9 +51,14 @@ func isFreshGenesis(app *AppContext) bool {
 }
 
 func prepareFreshStart(cmd *cobra.Command, app *AppContext) error {
-	app.Printer.Info("Pulling validator image (warming cache before genesis stamp)")
-	if _, err := app.Docker.ComposePull(cmd.Context()); err != nil {
-		return err
+	st, err := state.Load(app.StateFilePath())
+	if err == nil && app.Docker.ImageExists(cmd.Context(), st.KleverImage) {
+		app.Printer.Info("Validator image %s already present locally, skipping pull", st.KleverImage)
+	} else {
+		app.Printer.Info("Pulling validator image (warming cache before genesis stamp)")
+		if _, err := app.Docker.ComposePull(cmd.Context()); err != nil {
+			return err
+		}
 	}
 
 	nodesSetupPath := filepath.Join(app.NodeCfgDir(), "nodesSetup.json")
@@ -71,11 +76,7 @@ func prepareFreshStart(cmd *cobra.Command, app *AppContext) error {
 		return err
 	}
 
-	if state.Exists(app.StateFilePath()) {
-		st, err := state.Load(app.StateFilePath())
-		if err != nil {
-			return err
-		}
+	if err == nil {
 		st.StartTime = newStart
 		if err := state.Save(app.StateFilePath(), st); err != nil {
 			return err

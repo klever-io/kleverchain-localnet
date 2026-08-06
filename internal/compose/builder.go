@@ -23,6 +23,7 @@ type Resources struct {
 	CPUs       string
 	LogMaxSize string
 	LogMaxFile string
+	Restart    bool
 }
 
 func DefaultResources() Resources {
@@ -31,11 +32,13 @@ func DefaultResources() Resources {
 		CPUs:       "1.0",
 		LogMaxSize: "50m",
 		LogMaxFile: "5",
+		Restart:    true,
 	}
 }
 
 type templateData struct {
 	Image            string
+	SeednodeImage    string
 	NetworkName      string
 	NetworkSubnet    string
 	SeednodeIP       string
@@ -44,6 +47,7 @@ type templateData struct {
 	CPUs             string
 	LogMaxSize       string
 	LogMaxFile       string
+	Restart          bool
 	Validators       []ValidatorService
 }
 
@@ -66,6 +70,7 @@ func Build(state domain.LocalnetState, services []ValidatorService, res Resource
 
 	data := templateData{
 		Image:            state.KleverImage,
+		SeednodeImage:    domain.KleverImage,
 		NetworkName:      domain.NetworkName,
 		NetworkSubnet:    domain.NetworkSubnet,
 		SeednodeIP:       domain.SeednodeStaticIP,
@@ -74,6 +79,7 @@ func Build(state domain.LocalnetState, services []ValidatorService, res Resource
 		CPUs:             res.CPUs,
 		LogMaxSize:       res.LogMaxSize,
 		LogMaxFile:       res.LogMaxFile,
+		Restart:          res.Restart,
 		Validators:       ordered,
 	}
 

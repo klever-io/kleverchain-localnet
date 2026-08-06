@@ -45,7 +45,7 @@ func runKeysGenerate(cmd *cobra.Command, app *AppContext, validators int, force 
 		return ensureErr
 	}
 
-	g := keys.NewGenerator(dockercli.NewExecRunner(), st.KleverImage)
+	g := keys.NewGenerator(dockercli.NewExecRunner(), domain.KleverImage)
 	res, err := g.Generate(cmd.Context(), st, app.KeysDir(), force)
 	if err != nil {
 		return err

@@ -47,7 +47,7 @@ func runSetupAll(cmd *cobra.Command, app *AppContext, cf *configFlags) error {
 	if err := runConfigGenerate(cmd, app, cf); err != nil {
 		return err
 	}
-	if err := runComposeGenerate(app); err != nil {
+	if err := runComposeGenerate(app, cf.NoRestart); err != nil {
 		return err
 	}
 	printNextSteps(app)
